@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello World
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import 'antd/dist/antd.css';
+
+import './../node_modules/react-grid-layout/css/styles.css';
+import './../node_modules/react-resizable/css/styles.css';
+import './../node_modules/react-grid-layout/css/styles.css'
+import './../node_modules/react-resizable/css/styles.css'
+
+import { ThemeProvider } from 'styled-components';
+
+import SystemPaths from './routes/paths';
+import SystemRoutes from './routes/Routes';
+
+import GlobalContextProvider from './GlobalContextProvider';
+import GlobalStyle from './styles/global';
+import { light } from './styles/theme';
+
+const App: React.FC = () => {
+	return (
+			<ThemeProvider theme={light}>
+				<GlobalStyle />
+				<BrowserRouter>
+					{/*@ts-ignore*/}
+					<GlobalContextProvider>
+						<Routes>
+							<Route path="*" element={<SystemRoutes />}/>
+						</Routes>
+					</GlobalContextProvider>
+				</BrowserRouter>
+			</ThemeProvider>
+	);
+};
 
 export default App;
