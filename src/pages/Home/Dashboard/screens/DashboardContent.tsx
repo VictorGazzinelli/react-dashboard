@@ -1,6 +1,5 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import _ from "lodash";
-// import { useIntl } from 'react-intl';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { useBoolean } from 'react-hanger';
@@ -8,18 +7,18 @@ import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-desig
 import RGL, { WidthProvider } from "react-grid-layout";
 import { message, Row, Col, Popconfirm, Tooltip, Divider } from 'antd';
 
-// import { DashboardContext } from './ScreenDashboard';
+import { DashboardContext } from './ScreenDashboard';
 // import enumTipoGrafico from '../enum/enumTipoGrafico';
-// import { getTitle } from '../components/gridRender/handleTipoGrafico';
-// import useDoRequest from '../../../../hooks/useDoRequest/useDoRequest';
+import { getTitle } from '../components/gridRender/handleTipoGrafico';
 import { useArray, UseArrayActions } from '../../../../hooks/useArray';
 // import { IWidget } from '../../../../services/dashboard/dashboardInterface';
 
-// import NewWidget from "../components/NewWidget";
-// import GridRender from '../components/gridRender/GridRender';
+import NewWidget from "../components/NewWidget";
+import GridRender from '../components/gridRender/GridRender';
 import ButtonBar from '../components/buttonBar/ButtonBar';
 import SysPinner from '../../../../components/SysPinner';
-// import DrawerAddWidget from '../components/drawerAddWidget/DrawerAddWidget';
+import { IDashboardDto } from '../../../../services/dashboard/dashboardinterface';
+import DrawerAddWidget from '../components/drawerAddWidget/DrawerAddWidget';
 
 export interface IDashboardGridContext {
     arrDashboardGrid: UseArrayActions<any>
@@ -31,11 +30,10 @@ export const DashboardContentContext = createContext({} as IDashboardGridContext
 const ResponsiveReactGridLayout = WidthProvider(RGL);
 
 const DashboardContent: React.FC = () => {
-    // const intl = useIntl().formatMessage;
-    // const { selectedDashboard, setSelectedDashboard, setTitleDashboard, titleDashboard, disableOptions } = useContext(DashboardContext);
-    // const [selectedWidget, setSelectedWidget] = useState<any>();
-    // const { IdDashboard } = useParams<{ IdDashboard: string }>();
-    // const { IdEmpreendimento } = useParams<{ IdEmpreendimento: string }>();
+    const { selectedDashboard, setSelectedDashboard, setDashboardTitle, dashboardTitle, disableOptions } = useContext(DashboardContext);
+    const [selectedWidget, setSelectedWidget] = useState<any>();
+    const { IdDashboard } = useParams<{ IdDashboard: string }>();
+    const { IdEmpreendimento } = useParams<{ IdEmpreendimento: string }>();
     const [layout, setLayout] = useState<any>([]);
     const visibleDrawer = useBoolean(false);
     const arrDashboardGrid = useArray<any>([]);
@@ -121,75 +119,75 @@ const DashboardContent: React.FC = () => {
     //     return arrWidgetsLayout;
     // }
 
-    // const onLayoutChange = (currentLayout: any) => {
-    //     const changedLayout = currentLayout?.map((currentSize: any) => {
-		// 				//@ts-ignore
-    //         let obj = _.find([...layout], function (obj) {
-    //             return obj.i == currentSize.i
-    //         });
-    //         return {
-    //             ...obj, h: currentSize.h, w: currentSize.w, x: currentSize.x, y: currentSize.y
-    //         }
-    //     });
-    //     setLayout(changedLayout);
-    //     onSaveLayout(changedLayout);
-    // }
+    const onLayoutChange = (currentLayout: any) => {
+        const changedLayout = currentLayout?.map((currentSize: any) => {
+						//@ts-ignore
+            let obj = _.find([...layout], function (obj) {
+                return obj.i == currentSize.i
+            });
+            return {
+                ...obj, h: currentSize.h, w: currentSize.w, x: currentSize.x, y: currentSize.y
+            }
+        });
+        setLayout(changedLayout);
+        onSaveLayout(changedLayout);
+    }
 
-    // const onSaveLayout = (array: Array<any>) => {
-    //     if (obterDashboardPorId.loading) return;
-    //     if (!selectedDashboard) return;
-    //     if (!selectedDashboard.idDashboard) return;
-    //     if (!selectedDashboard.nome) return;
+    const onSaveLayout = (array: Array<any>) => {
+        if (!selectedDashboard) return;
+        if (!selectedDashboard.IdDashboard) return;
+        if (!selectedDashboard.Nome) return;
 
-    //     const listWidgets = array?.map((grid: any) => {
-    //         return {
-    //             coordX: grid.x,
-    //             coordY: grid.y,
-    //             coordW: grid.w,
-    //             coordH: grid.h,
-    //             descricao: grid.descricao,
-    //             tipoGrafico: grid.typeGraph,
-    //             tipoDado: grid.typeData,
-    //             IdServico: grid.IdServico,
-    //             IdBarragem: grid.IdBarragem,
-    //             IdEmpreendimento: grid.IdEmpreendimento,
-    //             IdTipoInstrumento: grid.IdTipoInstrumento,
-    //             IdInstrumento: grid.IdInstrumento,
-    //             periodo: grid.periodo,
-    //             dataInicio: grid.dataInicio,
-    //             dataFim: grid.dataFim
-    //         }
-    //     })
-    //     const obj = {
-    //         idDashboard: Number(IdDashboard) || selectedDashboard.idDashboard,
-    //         nome: selectedDashboard?.nome || titleDashboard,
-    //         widgets: JSON.stringify(listWidgets),
-    //     }
+        const listWidgets = array?.map((grid: any) => {
+            return {
+                coordX: grid.x,
+                coordY: grid.y,
+                coordW: grid.w,
+                coordH: grid.h,
+                descricao: grid.descricao,
+                tipoGrafico: grid.typeGraph,
+                tipoDado: grid.typeData,
+                IdServico: grid.IdServico,
+                IdBarragem: grid.IdBarragem,
+                IdEmpreendimento: grid.IdEmpreendimento,
+                IdTipoInstrumento: grid.IdTipoInstrumento,
+                IdInstrumento: grid.IdInstrumento,
+                periodo: grid.periodo,
+                dataInicio: grid.dataInicio,
+                dataFim: grid.dataFim
+            }
+        })
+        const dashboard : IDashboardDto = {
+            IdDashboard: Number(IdDashboard) || selectedDashboard.IdDashboard,
+						IdEmpreendimento: Number(IdEmpreendimento),
+            Nome: selectedDashboard?.Nome || dashboardTitle,
+            Widgets: JSON.stringify(listWidgets),
+        }
 
-    //     if (obj.widgets == selectedDashboard.widgets) return;
+        if (dashboard.Widgets == selectedDashboard.Widgets) return;
 
-    //     editarDashboardWidget.doRequest(obj).then((response) => {
-    //         if (response) {
-    //             setSelectedDashboard(response);
-    //             setTitleDashboard(response.nome);
-    //         } else {
-    //             message.error(intl({ id: 'Erro ao atualizar dashboard.' }));
-    //         }
-    //     })
-    // }
+        // editarDashboardWidget.doRequest(dashboard).then((response) => {
+        //     if (response) {
+        //         setSelectedDashboard(response);
+        //         setTitleDashboard(response.nome);
+        //     } else {
+        //         message.error(intl({ id: 'Erro ao atualizar dashboard.' }));
+        //     }
+        // })
+    }
 
-    // const onRemoveItem = (idWidget: string) => {
-    //     const localLayout = _.reject([...layout], { i: idWidget });
-    //     setLayout(localLayout);
-    //     if (localLayout.length == 0) {
-    //         onSaveLayout([]);
-    //     }
-    // }
+    const onRemoveItem = (idWidget: string) => {
+        const localLayout = _.reject([...layout], { i: idWidget });
+        setLayout(localLayout);
+        if (localLayout.length == 0) {
+            onSaveLayout([]);
+        }
+    }
 
-    // const editWidget = (widget: any) => {
-    //     setSelectedWidget(widget);
-    //     visibleDrawer.setValue(true);
-    // };
+    const editWidget = (widget: any) => {
+        setSelectedWidget(widget);
+        visibleDrawer.setValue(true);
+    };
 
     const defaultValuesContext: IDashboardGridContext = {
         arrDashboardGrid,
@@ -201,17 +199,17 @@ const DashboardContent: React.FC = () => {
             <Container>
                 <SysPinner spinning={false} />
                 <ButtonBar visibleDrawer={visibleDrawer} />
-                {/* <DrawerAddWidget
+                <DrawerAddWidget
                     visibleDrawer={visibleDrawer}
                     layout={layout}
                     setLayout={setLayout}
                     selectedWidget={selectedWidget}
                     setSelectedWidget={setSelectedWidget}
 
-                /> */}
-                {/* {layout?.length == 0
+                />
+                {layout?.length === 0
                     ? (
-                        <NewWidget visibleDrawer={visibleDrawer} hasDashboard={!!titleDashboard && !!selectedDashboard} />
+                        <NewWidget visibleDrawer={visibleDrawer} hasDashboard={!!dashboardTitle && !!selectedDashboard} />
                     ) : (
                         <ResponsiveReactGridLayout
                             className="widget-container"
@@ -235,7 +233,7 @@ const DashboardContent: React.FC = () => {
                                             </Col>
                                         </Tooltip>
                                         <Col span={4} className="col-button">
-                                            <Tooltip placement="top" title={intl({ id: 'Editar' })}>
+                                            <Tooltip placement="top" title={'Editar'}>
                                                 <EditOutlined
                                                     className="remove-widget-button hide"
                                                     onClick={() => editWidget(el)}
@@ -243,12 +241,12 @@ const DashboardContent: React.FC = () => {
                                             </Tooltip>
                                             <Divider type="vertical" className="remove-widget-button hide" />
                                             <Popconfirm
-                                                title={intl({ id: 'Deseja remover o gráfico selecionado?' })}
+                                                title={'Deseja remover o gráfico selecionado?'}
                                                 icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                                                 placement="bottomRight"
                                                 onConfirm={() => onRemoveItem(el.i)}
                                             >
-                                                <Tooltip placement="top" title={intl({ id: 'Excluir' })}>
+                                                <Tooltip placement="top" title={'Excluir'}>
                                                     <DeleteOutlined
                                                         className="remove-widget-button hide"
                                                     />
@@ -260,7 +258,7 @@ const DashboardContent: React.FC = () => {
                                 </div>
                             ))}
                         </ResponsiveReactGridLayout>
-                    )} */}
+                    )}
             </Container >
         </DashboardContentContext.Provider >
     );
