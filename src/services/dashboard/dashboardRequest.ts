@@ -1,4 +1,4 @@
-import { IDashboardDto, IDeletarDashboardInput, IDeletarDashboardOutput, IEditarDashboardInput, IEditarDashboardOutput, IInserirDashboardInput, IInserirDashboardOutput, IListarDashboardPorEmpreendimentoInput, IListarDashboardPorEmpreendimentoOutput} from './dashboardinterface';
+import { IDashboardDto, IDeletarDashboardInput, IDeletarDashboardOutput, IEditarDashboardInput, IEditarDashboardOutput, IInserirDashboardInput, IInserirDashboardOutput, IListarDashboardPorEmpreendimentoInput, IListarDashboardPorEmpreendimentoOutput, IObterDashboardInput, IObterDashboardOutput} from './dashboardinterface';
 
 export default class dashboardRequest {
 
@@ -16,6 +16,12 @@ export default class dashboardRequest {
 			Widgets: ''
 		}
 	]
+
+	static ObterDashboard(dto: IObterDashboardInput): Promise<IObterDashboardOutput>{
+		return new Promise((resolve, reject) => {
+			resolve({ Dashboard: dashboardRequest.Dashboards.find(dashboard => dashboard.IdDashboard === dto.IdDashboard) || dashboardRequest.Dashboards[0]})
+		})
+	}
 	
 	static ListarDashboardPorEmpreendimento(dto: IListarDashboardPorEmpreendimentoInput): Promise<IListarDashboardPorEmpreendimentoOutput>{
 		const dashBoards : IDashboardDto[] = [...dashboardRequest.Dashboards]

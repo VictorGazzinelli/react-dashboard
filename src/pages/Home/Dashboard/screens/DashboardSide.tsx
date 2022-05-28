@@ -61,8 +61,6 @@ const DashboardSide: React.FC = () => {
         navigate(paths.home.dashboard.goTo(currentEmpreendimento?.IdEmpreendimento, dashboard?.IdDashboard));
     }
 
-		console.log('dashboardArray', dashboardArray.value)
-
     return (
         <Container>
             <SysPinner spinning={false} />

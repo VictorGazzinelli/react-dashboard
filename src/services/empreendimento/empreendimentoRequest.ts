@@ -11,7 +11,7 @@ export default class empreendimentoRequest {
 	
 	static ObterEmpreendimento(dto: IObterEmpreendimentoInput): Promise<IObterEmpreendimentoOutput>{
 		return new Promise((resolve, reject) => {
-			resolve({ Empreendimento: this.Empreendimentos[0]})
+			resolve({ Empreendimento: empreendimentoRequest.Empreendimentos.find(emp => emp.IdEmpreendimento === dto.IdEmpreendimento) || empreendimentoRequest.Empreendimentos[0]})
 		})
 	}
 

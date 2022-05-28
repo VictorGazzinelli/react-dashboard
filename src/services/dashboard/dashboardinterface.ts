@@ -36,3 +36,11 @@ export interface IDeletarDashboardInput extends IInserirDashboardOutput {
 export interface IDeletarDashboardOutput extends IInserirDashboardOutput {
 	
 }
+
+export interface IObterDashboardInput extends IInserirDashboardOutput {
+
+}
+
+export interface IObterDashboardOutput {
+	Dashboard: IDashboardDto 
+}

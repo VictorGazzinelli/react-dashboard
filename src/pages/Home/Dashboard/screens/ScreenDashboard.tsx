@@ -45,12 +45,22 @@ const ScreenDashboard: React.FC = () => {
 
     const { dashboardArray, currentEmpreendimento } = useContext(GlobalContext)
 
+		const getDashboard = useApiRequest((api) => api.dashboard.ObterDashboard);
     const deleteDashboard = useApiRequest((api) => api.dashboard.DeletarDashboard);
     const createDashboard = useApiRequest((api) => api.dashboard.InserirDashboard);
     const editDashboard = useApiRequest((api) => api.dashboard.EditarDashboard);
 
+		const onComponentMount = () => {
+			if(!IdDashboard) return;
+			getDashboard.apiCall({IdDashboard: Number(IdDashboard)})
+				.then(response => {
+					setSelectedDashboard(response.Dashboard)
+					setDashboardTitle(response.Dashboard.Nome)
+				})
+		}
+		useEffect(onComponentMount,[])
+
     const onDashboardCreate = (name: string) => {
-				console.log('onDashboardCreate', name)
         const dto: IInserirDashboardInput = {
             IdEmpreendimento: Number(IdEmpreendimento || 0),
 						Nome: name,
@@ -64,7 +74,7 @@ const ScreenDashboard: React.FC = () => {
                 dashboardArray.push({ ...dto, IdDashboard: response.IdDashboard });
                 setSelectedDashboard({ ...dto, IdDashboard: response.IdDashboard })
                 setDashboardTitle(dto.Nome)
-                // navigate(paths.home.dashboard.goTo(currentEmpreendimento?.IdEmpreendimento, response?.IdDashboard));
+                navigate(paths.home.dashboard.goTo(currentEmpreendimento?.IdEmpreendimento, response?.IdDashboard));
             } else {
                 message.error('Ocorreu um erro ao criar dashboard');
             }

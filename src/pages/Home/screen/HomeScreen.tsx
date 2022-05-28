@@ -1,24 +1,23 @@
 import React, { useEffect, useContext } from 'react';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
-import paths from '../../../routes/paths';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { GlobalContext } from '../../../GlobalContextProvider';
 import ScreenDashboard from '../Dashboard/screens/ScreenDashboard';
+import useApiRequest from '../../../hooks/useApiRequest';
 
-const ScreenHome: React.FC = () => {
-	const navigate = useNavigate();
+const HomeScreen: React.FC = () => {
 	const { IdEmpreendimento } = useParams<{ IdEmpreendimento: string }>()
-	const { currentEmpreendimento } = useContext(GlobalContext)
+	const { setCurrentEmpreendimento } = useContext(GlobalContext)
+	const getEmpreendimento = useApiRequest((api) => api.empreendimento.ObterEmpreendimento);
 
-	const obterIdEmpreendimento = () : string | number => {
-		return currentEmpreendimento ? currentEmpreendimento?.IdEmpreendimento : ''
+	const onComponentMount = () => {
+		if(!IdEmpreendimento) return;
+		getEmpreendimento.apiCall({IdEmpreendimento: Number(IdEmpreendimento)})
+			.then(response => {
+				setCurrentEmpreendimento(response.Empreendimento)
+			})
 	}
 
-	const onStart = () => {
-		if (IdEmpreendimento) return;
-		navigate(paths.home.dashboard.goTo(obterIdEmpreendimento()))
-	}
-
-	useEffect(onStart, []);
+	useEffect(onComponentMount, []);
 
 	return (
 		<Routes>
@@ -29,4 +28,4 @@ const ScreenHome: React.FC = () => {
 	);
 };
 
-export default ScreenHome;
+export default HomeScreen;
