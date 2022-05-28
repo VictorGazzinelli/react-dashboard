@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-// import { useIntl } from 'react-intl';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { UseBoolean } from 'react-hanger';
@@ -15,10 +14,8 @@ interface IProps {
 }
 
 const ButtonBar: React.FC<IProps> = ({ visibleDrawer }) => {
-    // const intl = useIntl().formatMessage;
     const { IdDashboard } = useParams<{ IdDashboard: string }>();
-    // const { onDashboardDelete, titleDashboard, onDashboardEdit,selectedDashboard } = useContext(DashboardContext)
-		const { selectedDashboard } = useContext(DashboardContext)
+    const { onDashboardEdit, onDashboardDelete, dashboardTitle, selectedDashboard } = useContext(DashboardContext)
 
     return (
         <Wrapper useMargin={!selectedDashboard?.Nome}>
@@ -29,16 +26,10 @@ const ButtonBar: React.FC<IProps> = ({ visibleDrawer }) => {
                     </Typography.Title>
                 </Col>
                 <Col className='centralize-col'>
-                    {/* {selectedDashboard?.Nome &&  
+                    {selectedDashboard?.Nome &&  
                         <PopoverRenameDashboard
-                            titleDashboard={titleDashboard}
+                            titleDashboard={dashboardTitle}
                             onEdit={onDashboardEdit}
-                        />
-                    } */}
-										{selectedDashboard?.Nome &&  
-                        <PopoverRenameDashboard
-                            titleDashboard={'Dashboard'}
-                            onEdit={() => {}}
                         />
                     }
                 </Col>
@@ -46,17 +37,11 @@ const ButtonBar: React.FC<IProps> = ({ visibleDrawer }) => {
                     {selectedDashboard?.Nome  &&
                         <>
                             <Divider type="vertical" />
-                            {/* <Popconfirm
-                                title={intl({ id: 'Tem certeza que deseja excluir' }) + ` ${titleDashboard}?`}
-                                okText={intl({ id: "Sim" })}
-                                cancelText={intl({ id: "Não" })}
-                                onConfirm={() => onDashboardDelete(Number(IdDashboard))}
-                            > */}
 														<Popconfirm
-                                title={'Tem certeza que deseja excluir este dashboard?'}
+                                title={`Tem certeza que deseja excluir ${dashboardTitle}?`}
                                 okText={"Sim"}
                                 cancelText={"Não"}
-                                onConfirm={() => {}}
+                                onConfirm={() => onDashboardDelete(Number(IdDashboard))}
                             >
                                 <Tooltip title={'Excluir'}>
                                     <Button
@@ -91,7 +76,7 @@ const ButtonBar: React.FC<IProps> = ({ visibleDrawer }) => {
                 </Col>
             </Row>
             {selectedDashboard?.Nome &&
-                <SysDivider title='Lista de widgets' style={{ marginBottom: '15px' }} />
+                <SysDivider title='Painel' style={{ marginBottom: '16px' }} />
             }
         </Wrapper>
     );

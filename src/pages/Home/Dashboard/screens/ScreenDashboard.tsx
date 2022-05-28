@@ -82,7 +82,6 @@ const ScreenDashboard: React.FC = () => {
     }
 
     const onDashboardEdit = (newName: string) => {
-				console.log('newName', newName)
         if (!selectedDashboard) return;
 
         const editDtoDashboard: IDashboardDto = ({ ...selectedDashboard, Nome: newName })
